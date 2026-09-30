@@ -1163,15 +1163,15 @@ export const WellMusicAMPlayer = () => {
   // 底部控制组件（主界面和歌词界面共用）
   const BottomControls = () => (
     <View style={[styles.bottomControls, { marginTop: layoutSettings.bottomControlsMarginTop }]}>
-      {/* 进度条（原样式 + Kumone 式圆点隐藏） */}
+      {/* 进度条（Kumone 风格：4pt 细条 + thumb 默认隐藏 + 拖动放大 + 大触摸区域） */}
       <View style={styles.progressSection}>
         <Slider
           progress={progressValue}
           minimumValue={progressMin}
           maximumValue={progressMax}
           disableTapEvent={false}
-          sliderHeight={5}
-          thumbWidth={12}
+          sliderHeight={4}
+          thumbWidth={13}
           containerStyle={styles.sliderContainer}
           renderThumb={() => <Animated.View style={[styles.sliderThumb, thumbAnimatedStyle]} />}
           renderBubble={() => null}
@@ -1181,8 +1181,8 @@ export const WellMusicAMPlayer = () => {
           }}
           onSlidingStart={() => {
             isProgressSliding.value = true
-            sliderOpacity.value = 1
-            sliderScale.value = withSpring(1.4, { damping: 10, stiffness: 200 })
+            sliderOpacity.value = withSpring(1, { damping: 15, stiffness: 300 })
+            sliderScale.value = withSpring(13 / 9, { damping: 15, stiffness: 300 })
           }}
           onValueChange={(value) => {
             progressValue.value = value
@@ -1196,8 +1196,8 @@ export const WellMusicAMPlayer = () => {
           }}
           onSlidingComplete={async (value) => {
             isProgressSliding.value = false
-            sliderOpacity.value = 0
-            sliderScale.value = 1
+            sliderOpacity.value = withSpring(0, { damping: 15, stiffness: 300 })
+            sliderScale.value = withSpring(1, { damping: 15, stiffness: 300 })
             handleSeek(value * duration)
           }}
         />
@@ -1952,13 +1952,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sliderContainer: {
-    height: 5,
+    height: 20,
     borderRadius: 16,
   },
   sliderThumb: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },

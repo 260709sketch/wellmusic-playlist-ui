@@ -1002,15 +1002,15 @@ export const WellMusicAMV2Player = () => {
           renderThumb={() => <Animated.View style={[styles.sliderThumb, thumbAnimatedStyle]} />}
           renderBubble={() => null}
           theme={{
-            minimumTrackTintColor: 'rgba(255,255,255,0.55)',
-            maximumTrackTintColor: 'rgba(255,255,255,0.18)',
+            minimumTrackTintColor: '#fff',
+            maximumTrackTintColor: 'rgba(255,255,255,0.25)',
           }}
-          sliderHeight={7}
-          thumbWidth={12}
+          sliderHeight={4}
+          thumbWidth={13}
           onSlidingStart={() => {
             isProgressSliding.value = true
-            sliderOpacity.value = 1
-            sliderScale.value = withSpring(1.4, { damping: 10, stiffness: 200 })
+            sliderOpacity.value = withSpring(1, { damping: 15, stiffness: 300 })
+            sliderScale.value = withSpring(13 / 9, { damping: 15, stiffness: 300 })
           }}
           onValueChange={(value) => {
             progressValue.value = value
@@ -1024,8 +1024,8 @@ export const WellMusicAMV2Player = () => {
           }}
           onSlidingComplete={async (value) => {
             isProgressSliding.value = false
-            sliderOpacity.value = 0
-            sliderScale.value = 1
+            sliderOpacity.value = withSpring(0, { damping: 15, stiffness: 300 })
+            sliderScale.value = withSpring(1, { damping: 15, stiffness: 300 })
             handleSeek(value * duration)
           }}
         />
@@ -1683,14 +1683,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sliderContainer: {
-    height: 7,
-    borderRadius: 8,
+    height: 20,
+    borderRadius: 16,
   },
   sliderThumb: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: 'transparent',
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
   },
   progressTimeRow: {
     flexDirection: 'row',
