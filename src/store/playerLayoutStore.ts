@@ -67,7 +67,7 @@ export const DEFAULT_LAYOUT: LayoutSettings = {
   miniArtworkTranslateY: -810,
   miniSongInfoTranslateX: 80,
   miniSongInfoTranslateY: -383,
-  bottomControlsMarginTop: -5,
+  bottomControlsMarginTop: -10,
   playControlsMarginTop: 7,
   volumeRowMarginTop: 20,
   bottomButtonsRowMarginTop: 30,
