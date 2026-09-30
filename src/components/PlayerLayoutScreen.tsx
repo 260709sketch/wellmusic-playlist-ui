@@ -126,8 +126,8 @@ export const PlayerLayoutScreen = ({ onClose }: PlayerLayoutScreenProps) => {
 				{/* 歌词界面（小封面） */}
 				<Text style={[styles.sectionHeader, { color: colors.textMuted }]}>歌词界面（小封面）</Text>
 				<View style={[styles.group, { backgroundColor: colors.card, borderRadius: 14 }]}>
-					<ValueRow label="小封面 水平位移 X" value={getValue('miniArtworkTranslateX')} min={-800} max={200} step={10} onChange={(v) => updateSetting('miniArtworkTranslateX', v)} separatorColor={colors.separator} textColor={colors.text} />
-					<ValueRow label="小封面 垂直位移 Y" value={getValue('miniArtworkTranslateY')} min={-900} max={100} step={10} onChange={(v) => updateSetting('miniArtworkTranslateY', v)} separatorColor={colors.separator} textColor={colors.text} />
+					<ValueRow label="小封面 水平位移 X" value={getValue('miniArtworkTranslateX')} min={-1200} max={200} step={10} onChange={(v) => updateSetting('miniArtworkTranslateX', v)} separatorColor={colors.separator} textColor={colors.text} />
+					<ValueRow label="小封面 垂直位移 Y" value={getValue('miniArtworkTranslateY')} min={-1200} max={100} step={10} onChange={(v) => updateSetting('miniArtworkTranslateY', v)} separatorColor={colors.separator} textColor={colors.text} />
 					<ValueRow label="歌曲信息 水平位移 X" value={getValue('miniSongInfoTranslateX')} min={-200} max={400} step={5} onChange={(v) => updateSetting('miniSongInfoTranslateX', v)} separatorColor={colors.separator} textColor={colors.text} />
 					<ValueRow label="歌曲信息 垂直位移 Y" value={getValue('miniSongInfoTranslateY')} min={-700} max={100} step={5} onChange={(v) => updateSetting('miniSongInfoTranslateY', v)} separatorColor={colors.separator} textColor={colors.text} />
 				</View>

@@ -415,6 +415,14 @@ const HomeScreen = () => {
 
 	}, [])
 
+	// 关注歌手每10分钟自动刷新
+	useEffect(() => {
+		const interval = setInterval(() => {
+			refreshFollowedArtists()
+		}, 600000) // 10分钟
+		return () => clearInterval(interval)
+	}, [refreshFollowedArtists])
+
 	// 登录状态变化时刷新推荐
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -1043,9 +1051,6 @@ const HomeScreen = () => {
 					<View style={styles.dailySection}>
 						<View style={styles.dailyHeader}>
 							<Text style={[styles.sectionTitle, { color: colors.text }]}>关注歌手</Text>
-							<TouchableOpacity onPress={refreshFollowedArtists} style={{ marginRight: 8 }}>
-								<SFSymbol systemName="arrow.clockwise" size={20} color={colors.textMuted} />
-							</TouchableOpacity>
 						</View>
 						{followedArtists.length > 0 ? (
 							<ScrollView

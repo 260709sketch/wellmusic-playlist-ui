@@ -452,16 +452,10 @@ const PlaylistScreen = () => {
 				break
 		}
 	}, [router, isLoggedIn, cookie, toggleTrackFavorite, handleRemoveFromNeteasePlaylist, playlists])
-	// 第一首歌的封面（作为fallback）
-	const firstSongCover = useMemo(() => {
-		if (songs.length > 0 && songs[0].artwork) return songs[0].artwork
-		return playlist?.artwork || unknownTrackImageUri
-	}, [songs, playlist])
-
-	// 歌单封面（优先使用歌单本身的封面）
+	// 歌单封面：只使用歌单本身的封面，不再用第一首歌封面作为 fallback
 	const playlistCover = useMemo(() => {
-		return playlist?.artwork || playlist?.coverImg || firstSongCover
-	}, [playlist, firstSongCover])
+		return playlist?.artwork || playlist?.coverImg || unknownTrackImageUri
+	}, [playlist])
 
 	// 总时长
 	const totalDuration = useMemo(() => {
@@ -710,7 +704,7 @@ const PlaylistScreen = () => {
 						{/* 封面+信息行 */}
 						<View style={styles.infoRow}>
 							<FastImage
-								source={{ uri: firstSongCover, cache: shouldCacheImage() ? FastImage.cacheControl.immutable : FastImage.cacheControl.noCache }}
+								source={{ uri: playlistCover, cache: shouldCacheImage() ? FastImage.cacheControl.immutable : FastImage.cacheControl.noCache }}
 								style={styles.coverImage}
 							/>
 							<View style={styles.infoText}>
