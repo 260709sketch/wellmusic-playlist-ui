@@ -63,7 +63,6 @@ import { unknownTrackImageUri } from '@/constants/images'
 import { getSingerMidBySingerName } from '@/helpers/userApi/getMusicSource'
 import { useTrackPlayerFavorite } from '@/hooks/useTrackPlayerFavorite'
 import { useSeekLock } from '@/hooks/useSeekLock'
-import { useNeteaseScrobble } from '@/hooks/useNeteaseScrobble'
 import LyricManager from '@/helpers/lyricManager'
 import { useWordLyric } from '@/helpers/lyricManager'
 import KaraokeLine from '@/components/lyric/KaraokeLine'
@@ -185,9 +184,6 @@ export const WellMusicAMPlayer = () => {
   const duration = rawDuration > 0 ? rawDuration : trackDuration
   // 进度条显示用的进度（到100%停住，不往回退）
   const displayProgress = duration > 0 ? Math.min(Math.max(currentTime / duration, 0), 1) : 0
-
-  // 网易云听歌上报：startplay（最近播放）+ play（听歌排行次数）
-  useNeteaseScrobble({ track: currentMusic || activeTrack, isPlaying, currentTime, duration })
 
   // kumone 式 seek 同步：每次拖动/点击跳转都下发 seekCommand 给 AMLLLyrics，
   // 立即硬校准 AMLL 时钟（不受"跳变>2s"限制），保证歌词与人声严格同步
