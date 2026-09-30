@@ -1923,7 +1923,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   songArtist: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     color: 'rgba(255,255,255,0.6)',
     flexShrink: 1,
