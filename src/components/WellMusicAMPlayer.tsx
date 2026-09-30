@@ -1910,7 +1910,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   songTitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '500',
     color: '#fff',
     textAlign: 'left',
