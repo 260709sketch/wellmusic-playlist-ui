@@ -689,18 +689,18 @@ export const WellMusicAMV2Player = () => {
 
   const enterCompactMode = useCallback(() => {
     setShowComments(false)
-    // Kumone 式 spring 动画：大封面缩小到左上角
-    const springConfig = { damping: 28, stiffness: 200, mass: 1 }
-    coverScaleAnim.value = withSpring(miniArtworkScale, springConfig)
-    coverTranslateX.value = withSpring(miniArtworkTranslateX, springConfig)
-    coverTranslateY.value = withSpring(miniArtworkTranslateY, springConfig)
-    songInfoTranslateX.value = withSpring(miniSongInfoTranslateX, springConfig)
-    songInfoTranslateY.value = withSpring(miniSongInfoTranslateY, springConfig)
+    // 平滑 easeOut 动画：大封面缩小到左上角，无下砸无抖动
+    const timingConfig = { duration: 350, easing: Easing.out(Easing.cubic) }
+    coverScaleAnim.value = withTiming(miniArtworkScale, timingConfig)
+    coverTranslateX.value = withTiming(miniArtworkTranslateX, timingConfig)
+    coverTranslateY.value = withTiming(miniArtworkTranslateY, timingConfig)
+    songInfoTranslateX.value = withTiming(miniSongInfoTranslateX, timingConfig)
+    songInfoTranslateY.value = withTiming(miniSongInfoTranslateY, timingConfig)
     modeOpacity.value = 0
     modeTranslateY.value = 22
     requestAnimationFrame(() => {
-      modeOpacity.value = withSpring(1, springConfig)
-      modeTranslateY.value = withSpring(0, springConfig)
+      modeOpacity.value = withTiming(1, timingConfig)
+      modeTranslateY.value = withTiming(0, timingConfig)
     })
   }, [
     coverScaleAnim,
