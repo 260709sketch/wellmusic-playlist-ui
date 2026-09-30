@@ -93,7 +93,7 @@ export const DEFAULT_LAYOUT: LayoutSettings = {
   lyricFontSize: 30,
   lyricInactiveFontSize: 20,
   lyricTranslationFontSize: 16,
-  songInfoRowMarginTop: 36,
+  songInfoRowMarginTop: 56,
   lyricMiniArtworkSize: 60,
   queueContentTop: 70,
   queueTitleFontSize: 16,

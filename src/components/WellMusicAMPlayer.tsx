@@ -1841,7 +1841,7 @@ const styles = StyleSheet.create({
   // 大专辑封面（居中，更宽）
   artworkWrapper: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 40,
   },
   albumArtwork: {
     width: SCREEN_WIDTH * 0.86,
