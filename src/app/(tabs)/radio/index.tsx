@@ -849,14 +849,15 @@ const HomeScreen = () => {
 								end={{ x: 1, y: 1 }}
 								style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 							/>
-							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.16)' }} />
-							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.12)' }} />
+							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.12)' }} />
+							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.25)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
 							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
-									<Text style={{ color: '#fff', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
+									<Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
 										私人漫游
 									</Text>
-									<Text style={{ color: 'rgba(255,255,255,0.78)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
+									<Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
 										从喜欢的歌开始漫游
 									</Text>
 								</View>
@@ -877,14 +878,15 @@ const HomeScreen = () => {
 								end={{ x: 1, y: 1 }}
 								style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 							/>
-							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.16)' }} />
-							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.12)' }} />
+							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.12)' }} />
+							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.25)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
 							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
-									<Text style={{ color: '#fff', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
+									<Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
 										心动模式
 									</Text>
-									<Text style={{ color: 'rgba(255,255,255,0.78)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
+									<Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
 										你的红心歌曲和相似推荐
 									</Text>
 								</View>
