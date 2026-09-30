@@ -1930,12 +1930,12 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   songAlbumSeparator: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     color: 'rgba(255,255,255,0.4)',
   },
   songAlbum: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     color: 'rgba(255,255,255,0.5)',
     flexShrink: 3,
