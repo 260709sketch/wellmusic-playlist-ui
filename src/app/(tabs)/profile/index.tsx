@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
 	statsRow: { flexDirection: 'row', alignItems: 'center' },
 	statItem: { flex: 1, alignItems: 'center' },
 	statDivider: { width: 1, height: 40 },
-	statNum: { fontSize: 20, fontWeight: '700' },
+	statNum: { fontSize: 20, fontWeight: '600' },
 	statLabel: { fontSize: 12, marginTop: 5 },
 	sectionHeader: { fontSize: 18, fontWeight: '500', marginTop: 22, marginBottom: 10, marginLeft: 2 },
 	cellWrap: { gap: 10 },

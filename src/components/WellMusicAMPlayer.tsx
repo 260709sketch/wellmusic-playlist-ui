@@ -1973,7 +1973,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   qualityBadgeText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '500',
     color: '#fff',
   },
