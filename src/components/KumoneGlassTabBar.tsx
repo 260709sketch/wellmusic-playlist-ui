@@ -1,6 +1,7 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import SFSymbol from '@/components/SFSymbol'
 import { LibraryIcon } from '@/components/LibraryIcon'
+import { FloatingPillDock } from '@/components/FloatingPillDock'
 import { useAppTheme } from '@/hooks/useAppTheme'
 import { useLastActiveTrack } from '@/hooks/useLastActiveTrack'
 import myTrackPlayer from '@/helpers/trackPlayerIndex'
@@ -13,6 +14,7 @@ import { useRouter, usePathname } from 'expo-router'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
 	ActivityIndicator,
+	Platform,
 	StyleSheet,
 	TouchableOpacity,
 	View,
@@ -426,6 +428,12 @@ const SlidingPill = ({
 
 // ========== 主组件：Kumone 风格玻璃底部栏 ==========
 export const KumoneGlassTabBar = ({ isLiquidGlass = false }: { isLiquidGlass?: boolean }) => {
+	// iOS 26 以下直接使用悬浮胶囊样式
+	const iosVersion = parseFloat(Platform.Version as string)
+	if (iosVersion < 26) {
+		return <FloatingPillDock />
+	}
+
 	const { bottom } = useSafeAreaInsets()
 	const { colors } = useAppTheme()
 	const router = useRouter()
