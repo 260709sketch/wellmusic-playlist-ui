@@ -1848,10 +1848,10 @@ const styles = StyleSheet.create({
     height: SCREEN_WIDTH * 0.86,
     borderRadius: 22,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 16 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.4,
     shadowRadius: 24,
-    elevation: 10,
+    elevation: 16,
   },
   // 歌曲信息行：左歌名+歌手，右收藏+更多
   songInfoRow: {
