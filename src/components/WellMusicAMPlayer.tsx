@@ -712,7 +712,7 @@ export const WellMusicAMPlayer = () => {
   const enterCompactMode = useCallback(() => {
     setShowComments(false)
     // Kumone 式 spring 动画：大封面缩小到左上角
-    const springConfig = { damping: 30, stiffness: 320, mass: 1 }
+    const springConfig = { damping: 28, stiffness: 200, mass: 1 }
     coverScaleAnim.value = withSpring(miniArtworkScale, springConfig)
     coverTranslateX.value = withSpring(miniArtworkTranslateX, springConfig)
     coverTranslateY.value = withSpring(miniArtworkTranslateY, springConfig)

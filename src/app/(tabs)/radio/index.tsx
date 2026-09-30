@@ -87,6 +87,9 @@ const HomeScreen = () => {
 	const [radarLoading, setRadarLoading] = useState(false)
 	const [toplists, setToplists] = useState<any[]>([])
 	const [toplistsLoading, setToplistsLoading] = useState(false)
+	// 提取原创榜和热歌榜封面，用于私人漫游和心动模式卡片
+	const originalToplistCover = toplists.find(t => t.name?.includes('原创'))?.coverImgUrl || ''
+	const hotToplistCover = toplists.find(t => t.name?.includes('热歌'))?.coverImgUrl || ''
 	const pollRef = useRef<NodeJS.Timeout | null>(null)
 	const [stylizedSongs, setStylizedSongs] = useState<any[]>([])
 	const [stylizedLoading, setStylizedLoading] = useState(false)
@@ -843,21 +846,28 @@ const HomeScreen = () => {
 						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
+							{originalToplistCover ? (
+								<FastImage source={{ uri: originalToplistCover }} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
+							) : (
+								<LinearGradient
+									colors={['#29386B', '#6947A6']}
+									start={{ x: 0, y: 0 }}
+									end={{ x: 1, y: 1 }}
+									style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+								/>
+							)}
 							<LinearGradient
-								colors={['#29386B', '#6947A6']}
-								start={{ x: 0, y: 0 }}
-								end={{ x: 1, y: 1 }}
-								style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+								colors={['transparent', 'rgba(0,0,0,0.55)']}
+								style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80 }}
 							/>
-							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.12)' }} />
-							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.12)' }} />
-							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.25)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.08)' }} />
+							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.35)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
 							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
-									<Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
+									<Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
 										私人漫游
 									</Text>
-									<Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
+									<Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
 										从喜欢的歌开始漫游
 									</Text>
 								</View>
@@ -872,21 +882,28 @@ const HomeScreen = () => {
 						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
+							{hotToplistCover ? (
+								<FastImage source={{ uri: hotToplistCover }} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
+							) : (
+								<LinearGradient
+									colors={['#D62961', '#FA6E59']}
+									start={{ x: 0, y: 0 }}
+									end={{ x: 1, y: 1 }}
+									style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+								/>
+							)}
 							<LinearGradient
-								colors={['#D62961', '#FA6E59']}
-								start={{ x: 0, y: 0 }}
-								end={{ x: 1, y: 1 }}
-								style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+								colors={['transparent', 'rgba(0,0,0,0.55)']}
+								style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80 }}
 							/>
-							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.12)' }} />
-							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.12)' }} />
-							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.25)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(255,255,255,0.08)' }} />
+							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.35)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
 							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
-									<Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
+									<Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
 										心动模式
 									</Text>
-									<Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
+									<Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
 										你的红心歌曲和相似推荐
 									</Text>
 								</View>
@@ -1092,15 +1109,6 @@ const HomeScreen = () => {
 											numberOfLines={1}
 										>
 											{artist.name}
-										</Text>
-										<Text
-											style={{
-												fontSize: 11,
-												color: colors.textMuted,
-												marginTop: 3,
-											}}
-										>
-											{artist.platform === 'qq' ? 'QQ' : '网易云'}
 										</Text>
 									</TouchableOpacity>
 								))}
