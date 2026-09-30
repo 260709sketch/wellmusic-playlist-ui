@@ -475,6 +475,8 @@ export const WellMusicAMPlayer = () => {
       { translateX: coverTranslateX.value },
       { translateY: coverTranslateY.value },
     ],
+    // 动态圆角：缩放时保持视觉圆角一致，小封面不会变尖
+    borderRadius: 28 / Math.max(coverScaleAnim.value, 0.1),
   }))
 
   const handleTogglePlay = useCallback(() => {
@@ -826,31 +828,13 @@ export const WellMusicAMPlayer = () => {
       easing: Easing.in(Easing.cubic),
     })
     modeTranslateY.value = withTiming(18, { duration: 180 })
-    coverScaleAnim.value = withSpring(1, {
-      damping: 22,
-      stiffness: 260,
-      mass: 0.72,
-    })
-    coverTranslateX.value = withSpring(0, {
-      damping: 22,
-      stiffness: 260,
-      mass: 0.72,
-    })
-    coverTranslateY.value = withSpring(0, {
-      damping: 22,
-      stiffness: 260,
-      mass: 0.72,
-    })
-    songInfoTranslateX.value = withSpring(0, {
-      damping: 24,
-      stiffness: 280,
-      mass: 0.7,
-    })
-    songInfoTranslateY.value = withSpring(0, {
-      damping: 24,
-      stiffness: 280,
-      mass: 0.7,
-    })
+    // 平滑 spring：高 damping 低 stiffness，消除 overshoot 抖动
+    const expandSpring = { damping: 28, stiffness: 200, mass: 1 }
+    coverScaleAnim.value = withSpring(1, expandSpring)
+    coverTranslateX.value = withSpring(0, expandSpring)
+    coverTranslateY.value = withSpring(0, expandSpring)
+    songInfoTranslateX.value = withSpring(0, expandSpring)
+    songInfoTranslateY.value = withSpring(0, expandSpring)
     setTimeout(() => {
       setShowLyrics(false)
       setShowQueue(false)
@@ -1906,7 +1890,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   songTitle: {
-    fontSize: 17,
+    fontSize: 19,
     fontWeight: '500',
     color: '#fff',
     textAlign: 'left',
@@ -1919,19 +1903,19 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   songArtist: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
     color: 'rgba(255,255,255,0.6)',
     flexShrink: 1,
     minWidth: 0,
   },
   songAlbumSeparator: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
     color: 'rgba(255,255,255,0.4)',
   },
   songAlbum: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
     color: 'rgba(255,255,255,0.5)',
     flexShrink: 3,
