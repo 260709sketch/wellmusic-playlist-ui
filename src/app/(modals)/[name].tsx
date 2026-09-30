@@ -748,7 +748,7 @@ const handleToggleAllSongs = async () => {
 						<FastImage source={{ uri: singerListDetail.singerImg || '' }} style={{ width: 100, height: 100, borderRadius: 50 }} />
 						<View style={{ marginLeft: 20, flex: 1 }}>
 							<Text style={{ fontSize: 22, fontWeight: '500', color: isDark ? '#fff' : '#000' }} numberOfLines={1}>{singerName || singerListDetail.title || playlistName}</Text>
-							<Text style={{ fontSize: 13, color: '#999', marginTop: 4 }} numberOfLines={1}>{(singerListDetail.musicSize || allSongsTotal || songs.length).toLocaleString()} 首歌曲{(singerListDetail.albumSize || albumList.length) ? ` · ${(singerListDetail.albumSize || albumList.length).toLocaleString()} 张专辑` : ''}</Text>
+							<Text style={{ fontSize: 13, color: '#999', marginTop: 4 }} numberOfLines={1}>{(singerListDetail.musicSize || allSongsTotal || songs.length)} 首歌曲{(singerListDetail.albumSize || albumList.length) ? ` · ${(singerListDetail.albumSize || albumList.length)} 张专辑` : ''}</Text>
 						</View>
 					</View>
 
@@ -839,7 +839,7 @@ const handleToggleAllSongs = async () => {
 									) : (
 										<TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }} onPress={handleToggleAllSongs}>
 											<Text style={{ fontSize: 14, color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)' }}>
-												{`展开全部 ${songsTotal.toLocaleString()} 首`}
+												{`展开全部 ${songsTotal} 首`}
 											</Text>
 											<SFSymbol systemName="chevron.down" size={16} color={isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'} />
 										</TouchableOpacity>
