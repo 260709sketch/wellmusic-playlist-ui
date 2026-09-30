@@ -53,7 +53,7 @@ export const NeteaseLoginScreen = ({ onClose }: NeteaseLoginScreenProps) => {
 		}
 	}
 
-	const startQRLogin = async (reuseKey = false) => {
+	const startQRLogin = async (reuseKey = false, immediate = false) => {
 		stopPolling()
 		let key = reuseKey ? unikeyRef.current : ''
 
@@ -184,7 +184,7 @@ export const NeteaseLoginScreen = ({ onClose }: NeteaseLoginScreenProps) => {
 			pollTimerRef.current = setTimeout(poll, 1200)
 		}
 
-		pollTimerRef.current = setTimeout(poll, 1200)
+		pollTimerRef.current = immediate ? setTimeout(poll, 0) : setTimeout(poll, 1200)
 	}
 
 	useEffect(() => {
@@ -201,9 +201,9 @@ export const NeteaseLoginScreen = ({ onClose }: NeteaseLoginScreenProps) => {
 		const subscription = AppState.addEventListener('change', (nextAppState) => {
 			if (nextAppState === 'active' && loginTab === 'qrcode') {
 				if (qrStatus === 'failed' || qrStatus === 'expired') {
-					startQRLogin(false)
-				} else if (!isPollingActiveRef.current && unikeyRef.current) {
-					startQRLogin(true)
+					startQRLogin(false, true)
+				} else if (unikeyRef.current) {
+					startQRLogin(true, true)
 				}
 			}
 		})
@@ -220,7 +220,7 @@ export const NeteaseLoginScreen = ({ onClose }: NeteaseLoginScreenProps) => {
 		setSending(false)
 		if (res.success) {
 			showToast('验证码已发送', '', 'success')
-			setCountdown(60)
+			setCountdown(30)
 		} else {
 			showToast(res.data?.message || '发送失败', '', 'error')
 		}

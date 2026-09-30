@@ -215,7 +215,7 @@ export const NeteaseLoginModal = ({ visible, onClose }: { visible: boolean; onCl
 			if (nextAppState === 'active' && loginTab === 'qrcode' && visible) {
 				if (qrStatus === 'failed' || qrStatus === 'expired') {
 					startQRLogin(false, true)
-				} else if (!isPollingActiveRef.current && unikeyRef.current) {
+				} else if (unikeyRef.current) {
 					startQRLogin(true, true)
 				}
 			}
@@ -233,7 +233,7 @@ export const NeteaseLoginModal = ({ visible, onClose }: { visible: boolean; onCl
 		setSending(false)
 		if (res.success) {
 			showToast('验证码已发送', '', 'success')
-			setCountdown(60)
+			setCountdown(30)
 		} else {
 			showToast(res.data?.message || '发送失败', '', 'error')
 		}
