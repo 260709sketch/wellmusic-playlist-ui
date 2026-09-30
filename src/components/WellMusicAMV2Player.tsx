@@ -493,18 +493,13 @@ export const WellMusicAMV2Player = () => {
     }
   }, [isPlaying, showLyrics, showQueue, artworkScale])
 
-  const coverAnimStyle = useAnimatedStyle(() => {
-    const scale = coverScaleAnim.value * artworkScale.value
-    return {
-      transform: [
-        { scale },
-        { translateX: coverTranslateX.value },
-        { translateY: coverTranslateY.value },
-      ],
-      // 圆角补偿：缩放后视觉圆角保持和大封面一致（22pt）
-      borderRadius: 22 / Math.max(scale, 0.01),
-    }
-  })
+  const coverAnimStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: coverScaleAnim.value * artworkScale.value },
+      { translateX: coverTranslateX.value },
+      { translateY: coverTranslateY.value },
+    ],
+  }))
 
   const handleTogglePlay = useCallback(() => {
     if (isPlaying) {
@@ -677,13 +672,15 @@ export const WellMusicAMV2Player = () => {
     [lyrics, handleSeek, layoutSettings.lyricActiveOffset],
   )
 
-  // 封面尺寸和实际样式一致；位移从 layoutSettings 读取，支持用户在设置中自定义落点
-  const mainArtworkSize = SCREEN_WIDTH * 0.86
+  // 视频版：大封面 -> 左上角 108px 小封面，同时歌曲信息只移动左侧文字，
+  // 右侧收藏/更多按钮保持在原来的安全区域，避免像旧实现一样整体跑出屏幕。
+  const mainArtworkSize = SCREEN_WIDTH * 0.78
   const mainArtworkLeft = (SCREEN_WIDTH - mainArtworkSize) / 2
   const mainArtworkTop = top + 16 + 20
-  const miniArtworkSize = layoutSettings.lyricMiniArtworkSize ?? 60
+  const miniArtworkSize = layoutSettings.lyricMiniArtworkSize ?? 80
   const miniArtworkScale = miniArtworkSize / mainArtworkSize
-  // 用户可在设置中自定义小封面落点；默认值已修正为左上角锚点
+  // 直接用固定的位移值，避免复杂计算出错
+  // 当前-370/-450时左边距约60顶部约180，目标左边16顶部54
   const miniArtworkTranslateX = layoutSettings.miniArtworkTranslateX
   const miniArtworkTranslateY = layoutSettings.miniArtworkTranslateY
 
@@ -1002,15 +999,15 @@ export const WellMusicAMV2Player = () => {
           renderThumb={() => <Animated.View style={[styles.sliderThumb, thumbAnimatedStyle]} />}
           renderBubble={() => null}
           theme={{
-            minimumTrackTintColor: '#fff',
-            maximumTrackTintColor: 'rgba(255,255,255,0.25)',
+            minimumTrackTintColor: 'rgba(255,255,255,0.55)',
+            maximumTrackTintColor: 'rgba(255,255,255,0.18)',
           }}
-          sliderHeight={4}
-          thumbWidth={13}
+          sliderHeight={7}
+          thumbWidth={12}
           onSlidingStart={() => {
             isProgressSliding.value = true
-            sliderOpacity.value = withSpring(1, { damping: 15, stiffness: 300 })
-            sliderScale.value = withSpring(13 / 9, { damping: 15, stiffness: 300 })
+            sliderOpacity.value = 1
+            sliderScale.value = withSpring(1.4, { damping: 10, stiffness: 200 })
           }}
           onValueChange={(value) => {
             progressValue.value = value
@@ -1024,8 +1021,8 @@ export const WellMusicAMV2Player = () => {
           }}
           onSlidingComplete={async (value) => {
             isProgressSliding.value = false
-            sliderOpacity.value = withSpring(0, { damping: 15, stiffness: 300 })
-            sliderScale.value = withSpring(1, { damping: 15, stiffness: 300 })
+            sliderOpacity.value = 0
+            sliderScale.value = 1
             handleSeek(value * duration)
           }}
         />
@@ -1683,19 +1680,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sliderContainer: {
-    height: 20,
-    borderRadius: 16,
+    height: 7,
+    borderRadius: 8,
   },
   sliderThumb: {
-    width: 9,
-    height: 9,
-    borderRadius: 4.5,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 2,
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'transparent',
   },
   progressTimeRow: {
     flexDirection: 'row',
