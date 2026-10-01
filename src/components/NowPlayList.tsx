@@ -168,7 +168,7 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 			<View style={[styles.dismissPlayerSymbol, { top: top - 38 }]}>
 				<View style={styles.dismissPlayerBar} />
 				<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}>
-					<Text style={styles.header}>播放列表</Text>
+					<Text style={styles.header}>播放队列 · {tracks.length}</Text>
 					<TouchableOpacity
 						onPress={() => {
 							Alert.alert(
@@ -223,14 +223,12 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 	)
 
 	return (
-		<>
+		<View style={styles.container}>
 			{DismissPlayerSymbol}
 			<FlashList
 				data={tracks}
 				extraData={listExtraData}
 				contentContainerStyle={styles.contentContainer}
-				ListFooterComponent={ItemDivider}
-				ItemSeparatorComponent={ItemDivider}
 				ref={listRef}
 				ListEmptyComponent={EmptyListComponent}
 				renderItem={renderItem}
@@ -246,14 +244,19 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 					listRef.current?.scrollToOffset({ offset, animated: false })
 				}}
 			/>
-		</>
+		</View>
 	)
 })
 
 const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUtilsStyles>) =>
 	StyleSheet.create({
+		container: {
+			flex: 1,
+			backgroundColor: '#1c1c1e',
+		},
 		contentContainer: {
-			paddingTop: 130,
+			paddingTop: 140,
+			paddingHorizontal: 20,
 			paddingBottom: 220,
 		},
 		itemDivider: {
@@ -267,7 +270,8 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			right: 0,
 			zIndex: 1000,
 			paddingTop: 10,
-			backgroundColor: colors.overlayStrong,
+			paddingBottom: 16,
+			backgroundColor: '#1c1c1e',
 		},
 		dismissPlayerBar: {
 			width: 50,
@@ -283,7 +287,7 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			fontWeight: '500',
 			paddingBottom: 10,
 			paddingLeft: 20,
-			color: colors.text,
+			color: '#ffffff',
 		},
 		queueModeSegment: {
 			flexDirection: 'row',
@@ -314,12 +318,15 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 		queueItem: {
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingVertical: 10,
+			paddingVertical: 12,
 			paddingHorizontal: 16,
 			gap: 12,
+			borderRadius: 12,
+			backgroundColor: 'rgba(255,255,255,0.08)',
+			marginBottom: 8,
 		},
 		queueItemActive: {
-			backgroundColor: 'rgba(255,255,255,0.06)',
+			backgroundColor: 'rgba(255,255,255,0.15)',
 		},
 		queueItemArtwork: {
 			width: 48,
@@ -331,7 +338,7 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			minWidth: 0,
 		},
 		queueItemTitle: {
-			color: colors.text,
+			color: '#ffffff',
 			fontSize: 15,
 			fontWeight: '500',
 		},
@@ -339,7 +346,7 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			color: '#ff453a',
 		},
 		queueItemArtist: {
-			color: colors.textMuted,
+			color: 'rgba(255,255,255,0.5)',
 			fontSize: 13,
 			marginTop: 2,
 		},
