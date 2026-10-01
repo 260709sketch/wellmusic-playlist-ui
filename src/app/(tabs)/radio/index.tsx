@@ -839,59 +839,67 @@ const HomeScreen = () => {
 						</View>
 					</TouchableOpacity>
 
-					{/* 私人漫游 */}
-					<TouchableOpacity
-						activeOpacity={0.9}
-						onPress={handlePlayPersonalFM}
-						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
-					>
-						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
+						{/* 私人漫游 */}
+						<TouchableOpacity
+							activeOpacity={0.95}
+							onPress={handlePlayPersonalFM}
+							style={ width: 168, height: 168, borderRadius: 18, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.12, shadowRadius: 16, elevation: 8 }
+						>
+							<View style={ flex: 1, borderRadius: 18, overflow: 'hidden' }>
 								<LinearGradient
-									colors={['#5C9BD6', '#3A7BC8']}
-									start={{ x: 0, y: 0 }}
-									end={{ x: 1, y: 1 }}
-									style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+									colors={['#29386B', '#6947A6']}
+									start={ x: 0, y: 0 }
+									end={ x: 1, y: 1 }
+									style={ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }
 								/>
-								<Ionicons name="radio" size={46} color="rgba(255,255,255,0.35)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
-							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
-								<View>
-									<Text style={{ color: 'rgba(255,255,255,0.95)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
-										私人漫游
-									</Text>
-									<Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
-										从喜欢的歌开始漫游
-									</Text>
+								<View pointerEvents="none" style={ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.16)' } />
+								<Ionicons name="radio" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={ position: 'absolute', top: '50%', left: '50%', marginTop: -41, marginLeft: 5 } />
+								<View style={ flex: 1, padding: 14, justifyContent: 'space-between' }>
+									<View>
+										<Ionicons name="radio" size={15} color="rgba(255,255,255,0.92)" />
+									</View>
+									<View>
+										<Text style={ color: '#fff', fontSize: 18, fontWeight: 'bold' } numberOfLines={1}>
+											私人漫游
+										</Text>
+										<Text style={ color: 'rgba(255,255,255,0.78)', fontSize: 12, fontWeight: '600', marginTop: 7 } numberOfLines={2}>
+											从喜欢的歌开始漫游
+										</Text>
+									</View>
 								</View>
 							</View>
-						</View>
-					</TouchableOpacity>
+						</TouchableOpacity>
 
-					{/* 心动模式 */}
-					<TouchableOpacity
-						activeOpacity={0.9}
-						onPress={handlePlayIntelligence}
-						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
-					>
-						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
+						{/* 心动模式 */}
+						<TouchableOpacity
+							activeOpacity={0.95}
+							onPress={handlePlayIntelligence}
+							style={ width: 168, height: 168, borderRadius: 18, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.12, shadowRadius: 16, elevation: 8 }
+						>
+							<View style={ flex: 1, borderRadius: 18, overflow: 'hidden' }>
 								<LinearGradient
-									colors={['#E85D75', '#D94F6B']}
-									start={{ x: 0, y: 0 }}
-									end={{ x: 1, y: 1 }}
-									style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+									colors={['#D62961', '#FA6E59']}
+									start={ x: 0, y: 0 }
+									end={ x: 1, y: 1 }
+									style={ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }
 								/>
-								<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.35)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
-							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
-								<View>
-									<Text style={{ color: 'rgba(255,255,255,0.95)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
-										心动模式
-									</Text>
-									<Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 12, fontWeight: '500', marginTop: 4 }} numberOfLines={2}>
-										你的红心歌曲和相似推荐
-									</Text>
+								<View pointerEvents="none" style={ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.16)' } />
+								<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={ position: 'absolute', top: '50%', left: '50%', marginTop: -41, marginLeft: 5 } />
+								<View style={ flex: 1, padding: 14, justifyContent: 'space-between' }>
+									<View>
+										<Ionicons name="heart-circle" size={15} color="rgba(255,255,255,0.92)" />
+									</View>
+									<View>
+										<Text style={ color: '#fff', fontSize: 18, fontWeight: 'bold' } numberOfLines={1}>
+											心动模式
+										</Text>
+										<Text style={ color: 'rgba(255,255,255,0.78)', fontSize: 12, fontWeight: '600', marginTop: 7 } numberOfLines={2}>
+											你的红心歌曲和相似推荐
+										</Text>
+									</View>
 								</View>
 							</View>
-						</View>
-					</TouchableOpacity>
+						</TouchableOpacity>
 
 				</ScrollView>
 
