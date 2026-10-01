@@ -93,8 +93,8 @@ const PlatformHeaderButton = ({
 	const currentFull = PLATFORM_FULL_NAME[current]
 	const actions: MenuAction[] = (Object.keys(PLATFORM_FULL_NAME) as SearchPlatform[]).map((id) => ({
 		id,
-		title: PLATFORM_FULL_NAME[id],
-		state: id === current ? 'on' : 'off',
+		title: id === current ? PLATFORM_FULL_NAME[id] + '  ✓' : PLATFORM_FULL_NAME[id],
+		state: 'off',
 	}))
 	return (
 		<MenuView
