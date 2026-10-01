@@ -846,18 +846,13 @@ const HomeScreen = () => {
 						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
-							{originalToplistCover ? (
-								<FastImage source={{ uri: originalToplistCover }} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
-							) : (
 								<LinearGradient
-									colors={['#4DD0E1', '#26C6DA']}
+									colors={['#5C9BD6', '#3A7BC8']}
 									start={{ x: 0, y: 0 }}
 									end={{ x: 1, y: 1 }}
 									style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 								/>
-							)}
-							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.35)' }} />
-							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.4)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+								<Ionicons name="radio" size={46} color="rgba(255,255,255,0.35)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
 							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
 									<Text style={{ color: 'rgba(255,255,255,0.95)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
@@ -878,18 +873,13 @@ const HomeScreen = () => {
 						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
-							{hotToplistCover ? (
-								<FastImage source={{ uri: hotToplistCover }} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
-							) : (
 								<LinearGradient
-									colors={['#F48FB1', '#EC407A']}
+									colors={['#E85D75', '#D94F6B']}
 									start={{ x: 0, y: 0 }}
 									end={{ x: 1, y: 1 }}
 									style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 								/>
-							)}
-							<View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.35)' }} />
-							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.4)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+								<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.35)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
 							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
 									<Text style={{ color: 'rgba(255,255,255,0.95)', fontSize: 18, fontWeight: '500' }} numberOfLines={1}>
