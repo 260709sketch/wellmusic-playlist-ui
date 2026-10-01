@@ -719,13 +719,15 @@ export const WellMusicAMPlayer = () => {
     coverScaleAnim.value = miniArtworkScale
     coverTranslateX.value = miniArtworkTranslateX
     coverTranslateY.value = miniArtworkTranslateY
-    songInfoTranslateX.value = miniSongInfoTranslateX
-    songInfoTranslateY.value = miniSongInfoTranslateY
+    // 歌手信息保持平滑移动动画
+    const timingConfig = { duration: 280, easing: Easing.out(Easing.cubic) }
+    songInfoTranslateX.value = withTiming(miniSongInfoTranslateX, timingConfig)
+    songInfoTranslateY.value = withTiming(miniSongInfoTranslateY, timingConfig)
     requestAnimationFrame(() => {
-      coverOpacity.value = withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+      coverOpacity.value = withTiming(1, timingConfig)
     })
-    modeOpacity.value = withTiming(1, { duration: 280 })
-    modeTranslateY.value = withTiming(0, { duration: 280 })
+    modeOpacity.value = withTiming(1, timingConfig)
+    modeTranslateY.value = withTiming(0, timingConfig)
   }, [
     coverScaleAnim,
     coverTranslateX,
@@ -769,13 +771,15 @@ export const WellMusicAMPlayer = () => {
     coverScaleAnim.value = miniArtworkScale
     coverTranslateX.value = miniArtworkTranslateX
     coverTranslateY.value = miniArtworkTranslateY
-    songInfoTranslateX.value = miniSongInfoTranslateX
-    songInfoTranslateY.value = miniSongInfoTranslateY
+    // 歌手信息保持平滑移动动画
+    const timingConfig = { duration: 280, easing: Easing.out(Easing.cubic) }
+    songInfoTranslateX.value = withTiming(miniSongInfoTranslateX, timingConfig)
+    songInfoTranslateY.value = withTiming(miniSongInfoTranslateY, timingConfig)
     requestAnimationFrame(() => {
-      coverOpacity.value = withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+      coverOpacity.value = withTiming(1, timingConfig)
     })
-    modeOpacity.value = withTiming(1, { duration: 280 })
-    modeTranslateY.value = withTiming(0, { duration: 280 })
+    modeOpacity.value = withTiming(1, timingConfig)
+    modeTranslateY.value = withTiming(0, timingConfig)
   }, [
     coverScaleAnim,
     coverTranslateX,
@@ -834,6 +838,9 @@ export const WellMusicAMPlayer = () => {
 
 
   const handleHideCompactMode = useCallback(() => {
+    // 立即隐藏歌词/队列，避免大封面淡入时重叠
+    setShowLyrics(false)
+    setShowQueue(false)
     modeOpacity.value = withTiming(0, {
       duration: 180,
       easing: Easing.in(Easing.cubic),
@@ -844,15 +851,13 @@ export const WellMusicAMPlayer = () => {
     coverScaleAnim.value = 1
     coverTranslateX.value = 0
     coverTranslateY.value = 0
-    songInfoTranslateX.value = 0
-    songInfoTranslateY.value = 0
+    // 歌手信息保持平滑移动动画
+    const timingConfig = { duration: 280, easing: Easing.out(Easing.cubic) }
+    songInfoTranslateX.value = withTiming(0, timingConfig)
+    songInfoTranslateY.value = withTiming(0, timingConfig)
     requestAnimationFrame(() => {
-      coverOpacity.value = withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+      coverOpacity.value = withTiming(1, timingConfig)
     })
-    setTimeout(() => {
-      setShowLyrics(false)
-      setShowQueue(false)
-    }, 190)
   }, [
     coverScaleAnim,
     coverTranslateX,
