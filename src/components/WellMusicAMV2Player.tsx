@@ -1564,6 +1564,8 @@ export const WellMusicAMV2Player = () => {
                 playList={playList}
                 currentMusic={currentMusic}
                 repeatMode={repeatMode}
+                titleFontSize={layoutSettings.queueTitleFontSize ?? 16}
+                titleMarginTop={layoutSettings.queueTitleMarginTop ?? 0}
                 onPlaySong={(song: any) => {
                   myTrackPlayer.play(song, true)
                   handleHideCompactMode()
@@ -1840,7 +1842,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    top: 150,
+    top: 70,
     bottom: 0,
     zIndex: 4,
   },

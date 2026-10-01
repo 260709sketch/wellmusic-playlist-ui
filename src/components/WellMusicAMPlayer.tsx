@@ -1614,6 +1614,8 @@ export const WellMusicAMPlayer = () => {
                 playList={playList}
                 currentMusic={currentMusic}
                 repeatMode={repeatMode}
+                titleFontSize={layoutSettings.queueTitleFontSize ?? 16}
+                titleMarginTop={layoutSettings.queueTitleMarginTop ?? 0}
               />
             </Animated.View>
           )}

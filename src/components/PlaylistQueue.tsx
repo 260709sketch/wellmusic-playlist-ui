@@ -12,9 +12,11 @@ export type PlaylistQueueProps = {
   currentMusic: any
   repeatMode: MusicRepeatMode
   onPlaySong?: (song: any) => void
+  titleFontSize?: number
+  titleMarginTop?: number
 }
 
-export const PlaylistQueue = React.memo(({ playList, currentMusic, repeatMode, onPlaySong }: PlaylistQueueProps) => {
+export const PlaylistQueue = React.memo(({ playList, currentMusic, repeatMode, onPlaySong, titleFontSize = 16, titleMarginTop = 0 }: PlaylistQueueProps) => {
   const handleReorderSong = useCallback((song: any, action: 'top' | 'up' | 'down' | 'bottom') => {
     const list = getPlayList()
     const index = list.findIndex((s: any) => s.id === song.id && s.platform === song.platform)
@@ -95,8 +97,8 @@ export const PlaylistQueue = React.memo(({ playList, currentMusic, repeatMode, o
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.queueTitleRow}>
-        <Text style={styles.queueScreenTitle}>
+      <View style={[styles.queueTitleRow, { marginTop: titleMarginTop }]}>
+        <Text style={[styles.queueScreenTitle, { fontSize: titleFontSize }]}>
           播放队列 · {playList?.length || 0}
         </Text>
       </View>
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   queueScreenTitle: {
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: '500',
     color: '#fff',
     letterSpacing: -0.25,
