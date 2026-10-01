@@ -18,6 +18,7 @@ import {
   ActionSheetIOS,
   PanResponder,
   Animated as RNAnimated,
+  Share,
 } from 'react-native'
 import { BlurView } from 'expo-blur'
 import * as Haptics from 'expo-haptics'
@@ -1105,6 +1106,36 @@ export const WellMusicAMPlayer = () => {
     // 已改为 MenuView 原生弹窗，保留此函数备用
   }, [])
 
+  const handleShareSong = useCallback(async () => {
+    try {
+      const track = activeTrack || currentMusic
+      if (!track) return
+      const songId = track.songmid || track.id || ''
+      let platform = track.platform || track.source || 'qq'
+      const idStr = String(songId)
+      if (idStr.startsWith('netease_') || idStr.startsWith('wy_')) platform = 'netease'
+      if (idStr.startsWith('qq_')) platform = 'qq'
+
+      let url = ''
+      if (platform === 'netease' || platform === 'wy') {
+        const pureId = idStr.replace(/^(netease_|wy_)/, '')
+        url = `https://music.163.com/#/song?id=${pureId}`
+      } else if (platform === 'qq') {
+        const pureId = idStr.replace(/^qq_/, '')
+        url = `https://y.qq.com/n/ryqq/songDetail/${pureId}`
+      }
+
+      const title = `${track.title || '歌曲'} - ${track.artist || '未知歌手'}`
+      if (url) {
+        await Share.share({ message: `${title}\n${url}`, url })
+      } else {
+        await Share.share({ message: title })
+      }
+    } catch (e) {
+      console.error('share error', e)
+    }
+  }, [activeTrack, currentMusic])
+
   const qualityActions = ['128k', '320k', 'flac', '24bit', 'hires', 'master'].map(q => ({
     id: q,
     title: qualityDisplayName[q] || q,
@@ -1269,13 +1300,12 @@ export const WellMusicAMPlayer = () => {
         >
           <SFSymbol systemName="bubble.left.and.bubble.right" size={26} color="#d9d9d9" weight="medium" />
         </TouchableOpacity>
-        <AirPlayButton
-          size={25}
-          color="rgba(255,255,255,0.9)"
-          trackUrl={activeTrack?.url}
-          trackTitle={activeTrack?.title}
-          trackArtist={activeTrack?.artist}
-        />
+        <TouchableOpacity
+          onPress={handleShareSong}
+          style={styles.bottomButton}
+        >
+          <SFSymbol systemName="square.and.arrow.up" size={26} color="#d9d9d9" weight="medium" />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             showQueue ? handleHideCompactMode() : handleShowQueue()
@@ -1447,7 +1477,6 @@ export const WellMusicAMPlayer = () => {
                   style={styles.albumArtwork}
                   resizeMode={FastImage.resizeMode.cover}
                 />
-                <View pointerEvents="none" style={styles.coverBottomBar} />
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -1854,15 +1883,6 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 16,
   },
-  coverBottomBar: {
-    position: 'absolute',
-    bottom: 12,
-    alignSelf: 'center',
-    width: 64,
-    height: 5,
-    borderRadius: 2.5,
-    backgroundColor: 'rgba(255,255,255,0.35)',
-  },
   // 歌曲信息行：左歌名+歌手，右收藏+更多
   songInfoRow: {
     flexDirection: 'row',
@@ -1976,8 +1996,8 @@ const styles = StyleSheet.create({
   qualityBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     backgroundColor: 'rgba(255,255,255,0.08)',
     borderRadius: 8,
     borderWidth: 1,
