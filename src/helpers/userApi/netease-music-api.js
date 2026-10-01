@@ -1439,8 +1439,8 @@ export async function getNeteaseToplists(cookie = '') {
 		const data = await response.json()
 		if (data.code === 200 && data.list) {
 			// 过滤掉非官方排行榜，保留主要排行榜
-			// 只保留 kumone 的 5 个主要排行榜
-			const KUMONE_TOPLIST_IDS = [19723756, 3779629, 2884035, 3778678, 60198]
+			// 飙升榜、新歌榜、原创榜、热歌榜、欧美新歌榜、说唱榜
+			const KUMONE_TOPLIST_IDS = [19723756, 3779629, 2884035, 3778678, 60198, 991319590]
 			return data.list.filter((t) => KUMONE_TOPLIST_IDS.includes(t.id)).map((t) => ({
 				id: t.id,
 				name: t.name,
