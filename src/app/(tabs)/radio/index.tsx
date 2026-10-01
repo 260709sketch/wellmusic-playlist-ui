@@ -802,7 +802,7 @@ const HomeScreen = () => {
 					<TouchableOpacity
 						activeOpacity={0.9}
 						onPress={() => router.navigate('/(tabs)/radio/dailySongs')}
-						style={{ width: 160, height: 160, borderRadius: 16, elevation: 0 }}
+						style={{ width: 168, height: 168, borderRadius: 18, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 16, overflow: 'hidden' }}>
 							{tracks[0]?.artwork ? (
@@ -843,7 +843,7 @@ const HomeScreen = () => {
 					<TouchableOpacity
 						activeOpacity={0.95}
 						onPress={handlePlayPersonalFM}
-						style={{ width: 168, height: 168, borderRadius: 18, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.12, shadowRadius: 16, elevation: 8 }}
+						style={{ width: 168, height: 168, borderRadius: 18, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 18, overflow: 'hidden' }}>
 							<LinearGradient
@@ -871,7 +871,7 @@ const HomeScreen = () => {
 					<TouchableOpacity
 						activeOpacity={0.95}
 						onPress={handlePlayIntelligence}
-						style={{ width: 168, height: 168, borderRadius: 18, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.12, shadowRadius: 16, elevation: 8 }}
+						style={{ width: 168, height: 168, borderRadius: 18, elevation: 0 }}
 					>
 						<View style={{ flex: 1, borderRadius: 18, overflow: 'hidden' }}>
 							<LinearGradient
