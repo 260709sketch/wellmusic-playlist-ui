@@ -50,7 +50,8 @@ import { useRouter } from 'expo-router'
 import { ArtistSelectorModal } from '@/components/ArtistSelectorModal'
 import { AirPlayButton } from '@/components/AirPlayButton'
 import { DownloadQualityModal } from '@/components/DownloadQualityModal'
-import myTrackPlayer, { playListsStore } from '@/helpers/trackPlayerIndex'
+import myTrackPlayer, { MusicRepeatMode, playListsStore } from '@/helpers/trackPlayerIndex'
+import { setPlayList, getPlayList } from '@/store/playList'
 import { unknownTrackImageUri } from '@/constants/images'
 import { getSingerMidBySingerName } from '@/helpers/userApi/getMusicSource'
 import { useTrackPlayerFavorite } from '@/hooks/useTrackPlayerFavorite'
@@ -121,6 +122,9 @@ export const WellMusicAMV2Player = () => {
   const [showDownloadModal, setShowDownloadModal] = useState(false)
   const storedPlayLists = playListsStore.useValue() as any[] | null
   const [showQueue, setShowQueue] = useState(false)
+  const [queueVisibleCount, setQueueVisibleCount] = useState(10)
+  const queueFlatListRef = useRef<FlatList>(null)
+  const repeatMode = myTrackPlayer.useRepeatMode()
   const [showArtistSelector, setShowArtistSelector] = useState(false)
   const [artistOptions, setArtistOptions] = useState<{name: string; avatar?: string}[]>([])
 
@@ -735,6 +739,45 @@ export const WellMusicAMV2Player = () => {
     }, 100)
   }, [enterCompactMode, lyrics, currentLyricIndex, layoutSettings.lyricActiveOffset])
 
+  // 播放列表排序处理
+  const handleReorderSong = useCallback((song: any, action: 'top' | 'up' | 'down' | 'bottom') => {
+    const list = getPlayList()
+    const index = list.findIndex((s: any) => s.id === song.id && s.platform === song.platform)
+    if (index === -1) return
+
+    const newList = [...list]
+    const [item] = newList.splice(index, 1)
+
+    switch (action) {
+      case 'top':
+        newList.unshift(item)
+        break
+      case 'up':
+        if (index > 0) newList.splice(index - 1, 0, item)
+        else newList.unshift(item)
+        break
+      case 'down':
+        if (index < newList.length) newList.splice(index + 1, 0, item)
+        else newList.push(item)
+        break
+      case 'bottom':
+        newList.push(item)
+        break
+    }
+    setPlayList(newList)
+  }, [])
+
+  // 长按排序图标弹出菜单
+  const handleLongPressReorder = useCallback((song: any) => {
+    Alert.alert('调整播放顺序', '', [
+      { text: '置顶', onPress: () => handleReorderSong(song, 'top') },
+      { text: '上移', onPress: () => handleReorderSong(song, 'up') },
+      { text: '下移', onPress: () => handleReorderSong(song, 'down') },
+      { text: '置底', onPress: () => handleReorderSong(song, 'bottom') },
+      { text: '取消', style: 'cancel' },
+    ])
+  }, [handleReorderSong])
+
   const handleShowQueue = useCallback(() => {
     setShowLyrics(false)
     setShowQueue(true)
@@ -1209,44 +1252,140 @@ export const WellMusicAMV2Player = () => {
           <Text style={styles.embeddedPanelHint}>点击查看全部评论</Text>
         </ScrollView>
       </View>
-      {/* 面板3：队列（WellMusic v2 AppleMusic2QueuePanel 风格） */}
+      {/* 面板3：队列（AM 播放器风格） */}
       <View style={styles.embeddedPanel}>
-        <View style={styles.embeddedPanelHeader}>
-          <SFSymbol systemName="list.bullet" size={18} color="rgba(255,255,255,0.7)" />
-          <Text style={styles.embeddedPanelTitle}>播放队列 ({playList?.length || 0})</Text>
+        <Text style={styles.queueScreenTitle}>播放队列 · {playList?.length || 0}</Text>
+        <View style={styles.queueModeSegment}>
+          <TouchableOpacity
+            style={[styles.queueModeItem, repeatMode === MusicRepeatMode.QUEUE && styles.queueModeItemActive]}
+            onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.QUEUE)}
+          >
+            <SFSymbol
+              systemName="repeat"
+              size={19}
+              color={repeatMode === MusicRepeatMode.QUEUE ? '#ffffff' : 'rgba(255,255,255,0.7)'}
+            />
+            <Text style={styles.queueModeText}>顺序</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.queueModeItem, repeatMode === MusicRepeatMode.SHUFFLE && styles.queueModeItemActive]}
+            onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.SHUFFLE)}
+          >
+            <SFSymbol
+              systemName="shuffle"
+              size={20}
+              color={repeatMode === MusicRepeatMode.SHUFFLE ? '#ffffff' : 'rgba(255,255,255,0.7)'}
+            />
+            <Text style={styles.queueModeText}>随机</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.queueModeItem, repeatMode === MusicRepeatMode.SINGLE && styles.queueModeItemActive]}
+            onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.SINGLE)}
+          >
+            <SFSymbol
+              systemName="repeat.1"
+              size={19}
+              color={repeatMode === MusicRepeatMode.SINGLE ? '#ffffff' : 'rgba(255,255,255,0.7)'}
+            />
+            <Text style={styles.queueModeText}>单曲</Text>
+          </TouchableOpacity>
         </View>
-        <ScrollView style={styles.embeddedListScroll} showsVerticalScrollIndicator={false}>
-          {playList && playList.length > 0 ? (
-            playList.map((song: any, idx: number) => (
+        <FlatList
+          ref={queueFlatListRef}
+          style={styles.queueList}
+          contentContainerStyle={styles.queueListContent}
+          showsVerticalScrollIndicator={false}
+          data={playList || []}
+          keyExtractor={(item: any) => item.id + '_' + (item.platform || '')}
+          initialNumToRender={10}
+          maxToRenderPerBatch={4}
+          windowSize={3}
+          removeClippedSubviews={true}
+          getItemLayout={(_, index) => ({ length: 80, offset: 80 * index, index })}
+          onScrollToIndexFailed={() => {}}
+          onEndReachedThreshold={0.5}
+          onEndReached={() => {
+            if (playList && queueVisibleCount < playList.length) {
+              setQueueVisibleCount(prev => Math.min(prev + 4, playList.length))
+            }
+          }}
+          ListEmptyComponent={
+            <Text style={styles.queueEmpty}>队列为空</Text>
+          }
+          renderItem={({ item: song, index: idx }: any) => (
+            <TouchableOpacity
+              activeOpacity={0.82}
+              style={[
+                styles.queueItem,
+                currentMusic?.id === song.id && styles.queueItemActive,
+              ]}
+              onPress={() => {
+                myTrackPlayer.play(song, true)
+              }}
+            >
+              <FastImage
+                source={{
+                  uri: song.artwork ?? unknownTrackImageUri,
+                  cache: 'immutable',
+                }}
+                style={styles.queueItemArtwork}
+                resizeMode="cover"
+              />
+              <View style={styles.queueItemInfo}>
+                <Text
+                  style={[
+                    styles.queueItemTitle,
+                    currentMusic?.id === song.id && styles.queueItemTitleActive,
+                  ]}
+                  numberOfLines={1}
+                >
+                  {song.title}
+                </Text>
+                <Text
+                  style={styles.queueItemArtist}
+                  numberOfLines={1}
+                >
+                  {song.artist}
+                  {song.platform ? ` · ${song.platform}` : ''}
+                </Text>
+              </View>
+              {currentMusic?.id === song.id && (
+                <SFSymbol
+                  systemName="speaker.wave.3"
+                  size={19}
+                  color="rgba(255,255,255,0.8)"
+                />
+              )}
               <TouchableOpacity
-                key={idx}
-                style={styles.embeddedQueueItem}
-                onPress={() => myTrackPlayer.play(song, true)}
+                onPress={(event) => {
+                  event.stopPropagation()
+                  myTrackPlayer.remove(song)
+                }}
+                style={styles.queueTrailingButton}
               >
-                <Text style={styles.embeddedQueueIndex}>{idx + 1}</Text>
-                <View style={styles.embeddedQueueInfo}>
-                  <Text
-                    style={[
-                      styles.embeddedQueueTitle,
-                      currentMusic?.id === song.id && styles.embeddedQueueTitleActive,
-                    ]}
-                    numberOfLines={1}
-                  >
-                    {song.title}
-                  </Text>
-                  <Text style={styles.embeddedQueueArtist} numberOfLines={1}>
-                    {song.artist}
-                  </Text>
-                </View>
-                {currentMusic?.id === song.id && (
-                  <SFSymbol systemName="speaker.wave.3.fill" size={16} color="#ff453a" />
-                )}
+                <SFSymbol
+                  systemName="trash"
+                  size={25}
+                  color="rgba(255,255,255,0.68)"
+                />
               </TouchableOpacity>
-            ))
-          ) : (
-            <Text style={styles.embeddedPanelPlaceholder}>队列为空</Text>
+              <TouchableOpacity
+                onPress={(event) => event.stopPropagation()}
+                onLongPress={(event) => {
+                  event.stopPropagation()
+                  handleLongPressReorder(song)
+                }}
+                style={styles.queueTrailingButton}
+              >
+                <SFSymbol
+                  systemName="line.3.horizontal"
+                  size={24}
+                  color="rgba(255,255,255,0.68)"
+                />
+              </TouchableOpacity>
+            </TouchableOpacity>
           )}
-        </ScrollView>
+        />
       </View>
     </Animated.View>
   )
@@ -1443,29 +1582,36 @@ export const WellMusicAMV2Player = () => {
               </View>
 
               <View style={styles.queueModeSegment}>
-                <TouchableOpacity style={styles.queueModeItem}>
+                <TouchableOpacity
+                  style={[styles.queueModeItem, repeatMode === MusicRepeatMode.QUEUE && styles.queueModeItemActive]}
+                  onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.QUEUE)}
+                >
                   <SFSymbol
                     systemName="repeat"
                     size={19}
-                    color="rgba(255,255,255,0.7)"
+                    color={repeatMode === MusicRepeatMode.QUEUE ? '#ffffff' : 'rgba(255,255,255,0.7)'}
                   />
                   <Text style={styles.queueModeText}>顺序</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.queueModeItem, styles.queueModeItemActive]}
+                  style={[styles.queueModeItem, repeatMode === MusicRepeatMode.SHUFFLE && styles.queueModeItemActive]}
+                  onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.SHUFFLE)}
                 >
                   <SFSymbol
                     systemName="shuffle"
                     size={20}
-                    color="#ffffff"
+                    color={repeatMode === MusicRepeatMode.SHUFFLE ? '#ffffff' : 'rgba(255,255,255,0.7)'}
                   />
                   <Text style={styles.queueModeText}>随机</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.queueModeItem}>
+                <TouchableOpacity
+                  style={[styles.queueModeItem, repeatMode === MusicRepeatMode.SINGLE && styles.queueModeItemActive]}
+                  onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.SINGLE)}
+                >
                   <SFSymbol
                     systemName="repeat.1"
                     size={19}
-                    color="rgba(255,255,255,0.7)"
+                    color={repeatMode === MusicRepeatMode.SINGLE ? '#ffffff' : 'rgba(255,255,255,0.7)'}
                   />
                   <Text style={styles.queueModeText}>单曲</Text>
                 </TouchableOpacity>
@@ -1525,7 +1671,10 @@ export const WellMusicAMV2Player = () => {
                         />
                       )}
                       <TouchableOpacity
-                        onPress={(event) => event.stopPropagation()}
+                        onPress={(event) => {
+                          event.stopPropagation()
+                          myTrackPlayer.remove(song)
+                        }}
                         style={styles.queueTrailingButton}
                       >
                         <SFSymbol
@@ -1536,6 +1685,10 @@ export const WellMusicAMV2Player = () => {
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={(event) => event.stopPropagation()}
+                        onLongPress={(event) => {
+                          event.stopPropagation()
+                          handleLongPressReorder(song)
+                        }}
                         style={styles.queueTrailingButton}
                       >
                         <SFSymbol
@@ -2136,5 +2289,87 @@ const styles = StyleSheet.create({
     fontFamily: 'system',
     fontSize: 17,
     color: 'rgba(255,255,255,0.6)',
+  },
+  queueScreenTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 16,
+  },
+  queueModeSegment: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 12,
+    padding: 4,
+    marginBottom: 16,
+    gap: 4,
+  },
+  queueModeItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  queueModeItemActive: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  queueModeText: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  queueList: {
+    flex: 1,
+  },
+  queueListContent: {
+    paddingBottom: 20,
+  },
+  queueEmpty: {
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
+    marginTop: 60,
+    fontSize: 15,
+  },
+  queueItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    gap: 12,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
+  },
+  queueItemActive: {
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 10,
+  },
+  queueItemArtwork: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+  },
+  queueItemInfo: {
+    flex: 1,
+    minWidth: 0,
+  },
+  queueItemTitle: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  queueItemTitleActive: {
+    color: '#ff453a',
+  },
+  queueItemArtist: {
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: 13,
+    marginTop: 2,
+  },
+  queueTrailingButton: {
+    padding: 8,
+    marginLeft: 4,
   },
 })
