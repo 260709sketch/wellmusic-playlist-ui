@@ -1198,7 +1198,10 @@ export const WellMusicAMV2Player = () => {
         >
           <SFSymbol systemName="square.and.arrow.up" size={26} color="#d9d9d9" weight="medium" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomButton} onPress={() => router.navigate('/(modals)/playList')}>
+        <TouchableOpacity
+          style={[styles.bottomButton, showQueue && styles.bottomButtonActive]}
+          onPress={() => { showQueue ? handleHideCompactMode() : handleShowQueue() }}
+        >
           <SFSymbol systemName="list.bullet" size={26} color={showQueue ? '#ffffff' : '#d9d9d9'} weight="medium" />
         </TouchableOpacity>
       </View>
