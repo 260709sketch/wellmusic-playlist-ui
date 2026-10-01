@@ -1386,8 +1386,8 @@ const play = async (musicItem?: IMusic.IMusicItem | null, forcePlay?: boolean) =
 			throw new Error(PlayFailReason.PLAY_LIST_IS_EMPTY)
 		}
 
-		// 1. If already playing this track
-		if (isCurrentMusic(musicItem)) {
+		// 1. If already playing this track (forcePlay 时跳过快速路径，强制重新加载URL，用于音质切换)
+		if (isCurrentMusic(musicItem) && !forcePlay) {
 			let currentTrack: any = null
 			try {
 				currentTrack = await ReactNativeTrackPlayer.getTrack(0)
