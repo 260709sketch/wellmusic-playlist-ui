@@ -496,7 +496,7 @@ export const WellMusicAMV2Player = () => {
       { translateY: coverTranslateY.value },
     ],
     // 动态圆角：缩放时保持视觉圆角一致，小封面不会变尖
-    borderRadius: 28 / Math.max(coverScaleAnim.value, 0.1),
+    borderRadius: 24 / Math.max(coverScaleAnim.value, 0.1),
   }))
 
   const handleTogglePlay = useCallback(() => {
@@ -1597,10 +1597,10 @@ const styles = StyleSheet.create({
   albumArtwork: {
     width: SCREEN_WIDTH * 0.86,
     height: SCREEN_WIDTH * 0.86,
-    borderRadius: 22,
+    borderRadius: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.38,
     shadowRadius: 24,
     elevation: 16,
   },

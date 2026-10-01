@@ -853,11 +853,8 @@ const HomeScreen = () => {
 								style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 							/>
 							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.16)' }} />
-							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={{ position: 'absolute', top: '42%', left: '55%' }} />
-							<View style={{ flex: 1, padding: 14, justifyContent: 'space-between' }}>
-								<View>
-									<Ionicons name="radio" size={15} color="rgba(255,255,255,0.92)" />
-								</View>
+							<Ionicons name="radio" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
 									<Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }} numberOfLines={1}>
 										私人漫游
@@ -867,7 +864,8 @@ const HomeScreen = () => {
 									</Text>
 								</View>
 							</View>
-						</TouchableOpacity>
+						</View>
+					</TouchableOpacity>
 
 					{/* 心动模式 */}
 					<TouchableOpacity
@@ -883,11 +881,8 @@ const HomeScreen = () => {
 								style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
 							/>
 							<View pointerEvents="none" style={{ position: 'absolute', top: -26, right: -24, width: 92, height: 92, borderRadius: 46, backgroundColor: 'rgba(255,255,255,0.16)' }} />
-							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={{ position: 'absolute', top: '42%', left: '55%' }} />
-							<View style={{ flex: 1, padding: 14, justifyContent: 'space-between' }}>
-								<View>
-									<Ionicons name="heart-circle" size={15} color="rgba(255,255,255,0.92)" />
-								</View>
+							<Ionicons name="heart-circle" size={46} color="rgba(255,255,255,0.32)" pointerEvents="none" style={{ position: 'absolute', top: 14, left: 14 }} />
+							<View style={{ flex: 1, padding: 14, justifyContent: 'flex-end' }}>
 								<View>
 									<Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }} numberOfLines={1}>
 										心动模式
@@ -897,7 +892,8 @@ const HomeScreen = () => {
 									</Text>
 								</View>
 							</View>
-						</TouchableOpacity>
+						</View>
+					</TouchableOpacity>
 
 				</ScrollView>
 
