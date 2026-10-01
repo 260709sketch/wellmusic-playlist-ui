@@ -1447,6 +1447,7 @@ export const WellMusicAMPlayer = () => {
                   style={styles.albumArtwork}
                   resizeMode={FastImage.resizeMode.cover}
                 />
+                <View pointerEvents="none" style={styles.coverBottomBar} />
               </TouchableOpacity>
             </Animated.View>
           </View>
@@ -1853,6 +1854,15 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 16,
   },
+  coverBottomBar: {
+    position: 'absolute',
+    bottom: 12,
+    alignSelf: 'center',
+    width: 64,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: 'rgba(255,255,255,0.35)',
+  },
   // 歌曲信息行：左歌名+歌手，右收藏+更多
   songInfoRow: {
     flexDirection: 'row',
@@ -1966,16 +1976,18 @@ const styles = StyleSheet.create({
   qualityBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
     gap: 4,
   },
   qualityBadgeText: {
-    fontSize: 10,
-    fontWeight: '500',
-    color: '#fff',
+    fontSize: 11,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.9)',
   },
   playControlsRow: {
     flexDirection: 'row',

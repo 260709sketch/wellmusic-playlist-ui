@@ -1604,6 +1604,15 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 16,
   },
+  coverBottomBar: {
+    position: 'absolute',
+    bottom: 12,
+    alignSelf: 'center',
+    width: 64,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: 'rgba(255,255,255,0.35)',
+  },
   // 歌曲信息行：左歌名+歌手，右收藏+更多
   songInfoRow: {
     flexDirection: 'row',
