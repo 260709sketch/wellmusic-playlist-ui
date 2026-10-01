@@ -1560,25 +1560,6 @@ export const WellMusicAMV2Player = () => {
                 <Text style={styles.queueScreenTitle}>
                   播放队列 · {playList?.length || 0}
                 </Text>
-                <TouchableOpacity
-                  style={styles.queueSendButton}
-                  onPress={() => {
-                    Alert.alert(
-                      '清空播放队列',
-                      '确定要清空当前播放队列吗？当前播放的歌曲会保留。',
-                      [
-                        { text: '取消', style: 'cancel' },
-                        { text: '清空', style: 'destructive', onPress: () => myTrackPlayer.clearToBePlayed() },
-                      ],
-                    )
-                  }}
-                >
-                  <SFSymbol
-                    systemName="trash"
-                    size={22}
-                    color="rgba(255,255,255,0.72)"
-                  />
-                </TouchableOpacity>
               </View>
 
               <View style={styles.queueModeSegment}>
@@ -1617,15 +1598,23 @@ export const WellMusicAMV2Player = () => {
                 </TouchableOpacity>
               </View>
 
-              <ScrollView
+              <FlatList
                 style={styles.queueList}
                 contentContainerStyle={styles.queueListContent}
                 showsVerticalScrollIndicator={false}
-              >
-                {playList && playList.length > 0 ? (
-                  playList.map((song: any, idx: number) => (
+                data={playList || []}
+                keyExtractor={(item: any) => item.id + '_' + (item.platform || '')}
+                initialNumToRender={10}
+                maxToRenderPerBatch={4}
+                windowSize={3}
+                removeClippedSubviews={true}
+                getItemLayout={(_, index) => ({ length: 80, offset: 80 * index, index })}
+                onScrollToIndexFailed={() => {}}
+                ListEmptyComponent={
+                  <Text style={styles.queueEmpty}>队列为空</Text>
+                }
+                renderItem={({ item: song }: any) => (
                     <TouchableOpacity
-                      key={idx}
                       activeOpacity={0.82}
                       style={[
                         styles.queueItem,
@@ -1640,6 +1629,7 @@ export const WellMusicAMV2Player = () => {
                       <FastImage
                         source={{
                           uri: song.artwork ?? unknownTrackImageUri,
+                          cache: 'immutable',
                         }}
                         style={styles.queueItemArtwork}
                         resizeMode="cover"
@@ -1698,11 +1688,8 @@ export const WellMusicAMV2Player = () => {
                         />
                       </TouchableOpacity>
                     </TouchableOpacity>
-                  ))
-                ) : (
-                  <Text style={styles.queueEmpty}>队列为空</Text>
                 )}
-              </ScrollView>
+              />
             </Animated.View>
           )}
         </View>
@@ -2291,41 +2278,44 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.6)',
   },
   queueScreenTitle: {
+    fontSize: 22,
+    fontWeight: '500',
     color: '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 16,
+    letterSpacing: -0.25,
   },
   queueModeSegment: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 12,
-    padding: 4,
+    height: 44,
+    borderRadius: 22,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: 'rgba(255,255,255,0.055)',
     marginBottom: 16,
-    gap: 4,
   },
   queueModeItem: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    borderRadius: 8,
-    gap: 6,
+    gap: 9,
+    borderRightWidth: 1,
+    borderRightColor: 'rgba(255,255,255,0.10)',
   },
   queueModeItemActive: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.13)',
   },
   queueModeText: {
-    color: 'rgba(255,255,255,0.7)',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
+    color: 'rgba(255,255,255,0.78)',
   },
   queueList: {
     flex: 1,
   },
   queueListContent: {
-    paddingBottom: 20,
+    paddingBottom: 210,
+    gap: 10,
   },
   queueEmpty: {
     color: 'rgba(255,255,255,0.5)',
@@ -2336,40 +2326,43 @@ const styles = StyleSheet.create({
   queueItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 14,
     paddingHorizontal: 4,
-    gap: 12,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'rgba(255,255,255,0.08)',
+    paddingVertical: 10,
+    gap: 10,
   },
   queueItemActive: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.14)',
   },
   queueItemArtwork: {
     width: 48,
     height: 48,
-    borderRadius: 8,
+    borderRadius: 10,
   },
   queueItemInfo: {
     flex: 1,
-    minWidth: 0,
+    flexShrink: 3,
+    alignItems: 'flex-start',
   },
   queueItemTitle: {
-    color: '#fff',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '500',
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: 3,
   },
   queueItemTitleActive: {
-    color: '#ff453a',
+    color: '#fff',
   },
   queueItemArtist: {
-    color: 'rgba(255,255,255,0.5)',
-    fontSize: 13,
-    marginTop: 2,
+    fontSize: 14,
+    fontWeight: '500',
+    color: 'rgba(255,255,255,0.6)',
   },
   queueTrailingButton: {
-    padding: 8,
-    marginLeft: 4,
+    width: 30,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
