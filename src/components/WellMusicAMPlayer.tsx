@@ -166,6 +166,7 @@ export const WellMusicAMPlayer = () => {
   const coverScaleAnim = useSharedValue(1)
   const coverTranslateX = useSharedValue(0)
   const coverTranslateY = useSharedValue(0)
+  const coverOpacity = useSharedValue(1)
   // WellMusic v2 特色：歌曲信息动画（移到封面右边）
   const songInfoTranslateX = useSharedValue(0)
   const songInfoTranslateY = useSharedValue(0)
@@ -471,6 +472,7 @@ export const WellMusicAMPlayer = () => {
   }, [isPlaying, showLyrics, showQueue, artworkScale])
 
   const coverAnimStyle = useAnimatedStyle(() => ({
+    opacity: coverOpacity.value,
     transform: [
       { scale: coverScaleAnim.value * artworkScale.value },
       { translateX: coverTranslateX.value },
@@ -712,19 +714,23 @@ export const WellMusicAMPlayer = () => {
 
   const enterCompactMode = useCallback(() => {
     setShowComments(false)
-    // 平滑 easeOut 动画：大封面缩小到左上角，无下砸无抖动
-    const timingConfig = { duration: 350, easing: Easing.out(Easing.cubic) }
-    coverScaleAnim.value = withTiming(miniArtworkScale, timingConfig)
-    coverTranslateX.value = withTiming(miniArtworkTranslateX, timingConfig)
-    coverTranslateY.value = withTiming(miniArtworkTranslateY, timingConfig)
-    songInfoTranslateX.value = withTiming(miniSongInfoTranslateX, timingConfig)
-    songInfoTranslateY.value = withTiming(miniSongInfoTranslateY, timingConfig)
-    modeOpacity.value = withTiming(1, timingConfig)
-    modeTranslateY.value = withTiming(0, timingConfig)
+    // 大封面瞬间隐藏，然后小封面在目标位置淡入
+    coverOpacity.value = 0
+    coverScaleAnim.value = miniArtworkScale
+    coverTranslateX.value = miniArtworkTranslateX
+    coverTranslateY.value = miniArtworkTranslateY
+    songInfoTranslateX.value = miniSongInfoTranslateX
+    songInfoTranslateY.value = miniSongInfoTranslateY
+    requestAnimationFrame(() => {
+      coverOpacity.value = withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+    })
+    modeOpacity.value = withTiming(1, { duration: 280 })
+    modeTranslateY.value = withTiming(0, { duration: 280 })
   }, [
     coverScaleAnim,
     coverTranslateX,
     coverTranslateY,
+    coverOpacity,
     songInfoTranslateX,
     songInfoTranslateY,
     modeOpacity,
@@ -758,19 +764,23 @@ export const WellMusicAMPlayer = () => {
     setShowQueue(true)
     setShowComments(false)
     setQueueVisibleCount(10)  // 每次打开重置为10首
-    // Kumone 式 spring 动画
-    const springConfig = { damping: 30, stiffness: 320, mass: 1 }
-    coverScaleAnim.value = withSpring(miniArtworkScale, springConfig)
-    coverTranslateX.value = withSpring(miniArtworkTranslateX, springConfig)
-    coverTranslateY.value = withSpring(miniArtworkTranslateY, springConfig)
-    songInfoTranslateX.value = withSpring(miniSongInfoTranslateX, springConfig)
-    songInfoTranslateY.value = withSpring(miniSongInfoTranslateY, springConfig)
-    modeOpacity.value = withSpring(1, springConfig)
-    modeTranslateY.value = withSpring(0, springConfig)
+    // 大封面瞬间隐藏，然后小封面淡入
+    coverOpacity.value = 0
+    coverScaleAnim.value = miniArtworkScale
+    coverTranslateX.value = miniArtworkTranslateX
+    coverTranslateY.value = miniArtworkTranslateY
+    songInfoTranslateX.value = miniSongInfoTranslateX
+    songInfoTranslateY.value = miniSongInfoTranslateY
+    requestAnimationFrame(() => {
+      coverOpacity.value = withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+    })
+    modeOpacity.value = withTiming(1, { duration: 280 })
+    modeTranslateY.value = withTiming(0, { duration: 280 })
   }, [
     coverScaleAnim,
     coverTranslateX,
     coverTranslateY,
+    coverOpacity,
     songInfoTranslateX,
     songInfoTranslateY,
     modeOpacity,
@@ -829,13 +839,16 @@ export const WellMusicAMPlayer = () => {
       easing: Easing.in(Easing.cubic),
     })
     modeTranslateY.value = withTiming(18, { duration: 180 })
-    // 平滑 spring：高 damping 低 stiffness，消除 overshoot 抖动
-    const expandSpring = { damping: 28, stiffness: 200, mass: 1 }
-    coverScaleAnim.value = withSpring(1, expandSpring)
-    coverTranslateX.value = withSpring(0, expandSpring)
-    coverTranslateY.value = withSpring(0, expandSpring)
-    songInfoTranslateX.value = withSpring(0, expandSpring)
-    songInfoTranslateY.value = withSpring(0, expandSpring)
+    // 小封面瞬间隐藏，然后大封面淡入
+    coverOpacity.value = 0
+    coverScaleAnim.value = 1
+    coverTranslateX.value = 0
+    coverTranslateY.value = 0
+    songInfoTranslateX.value = 0
+    songInfoTranslateY.value = 0
+    requestAnimationFrame(() => {
+      coverOpacity.value = withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+    })
     setTimeout(() => {
       setShowLyrics(false)
       setShowQueue(false)
@@ -844,6 +857,7 @@ export const WellMusicAMPlayer = () => {
     coverScaleAnim,
     coverTranslateX,
     coverTranslateY,
+    coverOpacity,
     songInfoTranslateX,
     songInfoTranslateY,
     modeOpacity,
