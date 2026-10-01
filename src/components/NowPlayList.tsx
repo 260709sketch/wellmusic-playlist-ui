@@ -1,7 +1,7 @@
 import { unknownTrackImageUri } from '@/constants/images'
 import SFSymbol from '@/components/SFSymbol'
 import { ThemeColors } from '@/constants/tokens'
-import myTrackPlayer from '@/helpers/trackPlayerIndex'
+import myTrackPlayer, { MusicRepeatMode } from '@/helpers/trackPlayerIndex'
 import { useThemeColors } from '@/hooks/useAppTheme'
 import { useUtilsStyles } from '@/styles'
 import { isSameMediaItem } from '@/utils/mediaItem'
@@ -12,7 +12,7 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Track, useIsPlaying } from 'react-native-track-player'
-import TracksListItem from './TracksListItem'
+import { setPlayList, getPlayList } from '@/store/playList'
 
 export type TracksListProps = {
 	id: string
@@ -52,6 +52,33 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 	const currentMusic = myTrackPlayer.useCurrentMusic()
 	const { playing } = useIsPlaying()
 	const { top } = useSafeAreaInsets()
+	const repeatMode = myTrackPlayer.useRepeatMode()
+
+	// 播放列表排序
+	const handleReorderSong = useCallback((song: any, action: 'top' | 'up' | 'down' | 'bottom') => {
+		const list = getPlayList()
+		const index = list.findIndex((s: any) => s.id === song.id && s.platform === song.platform)
+		if (index === -1) return
+		const newList = [...list]
+		const [item] = newList.splice(index, 1)
+		switch (action) {
+			case 'top': newList.unshift(item); break
+			case 'up': index > 0 ? newList.splice(index - 1, 0, item) : newList.unshift(item); break
+			case 'down': index < newList.length ? newList.splice(index + 1, 0, item) : newList.push(item); break
+			case 'bottom': newList.push(item); break
+		}
+		setPlayList(newList)
+	}, [])
+
+	const handleLongPressReorder = useCallback((song: any) => {
+		Alert.alert('调整播放顺序', '', [
+			{ text: '置顶', onPress: () => handleReorderSong(song, 'top') },
+			{ text: '上移', onPress: () => handleReorderSong(song, 'up') },
+			{ text: '下移', onPress: () => handleReorderSong(song, 'down') },
+			{ text: '置底', onPress: () => handleReorderSong(song, 'bottom') },
+			{ text: '取消', style: 'cancel' },
+		])
+	}, [handleReorderSong])
 
 
 
@@ -78,16 +105,46 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 				track as IMusic.IMusicItem,
 				currentMusic as IMusic.IMusicItem | null | undefined,
 			)
+			const song = track as any
 			return (
-				<TracksListItem
-					track={track}
-					onTrackSelect={handleTrackSelect}
-					isActiveTrack={isActiveTrack}
-					isPlaying={isActiveTrack && !!playing}
-				/>
+				<TouchableOpacity
+					activeOpacity={0.82}
+					style={[styles.queueItem, isActiveTrack && styles.queueItemActive]}
+					onPress={() => myTrackPlayer.play(song, true)}
+				>
+					<FastImage
+						source={{ uri: song.artwork ?? unknownTrackImageUri, cache: 'immutable' }}
+						style={styles.queueItemArtwork}
+						resizeMode="cover"
+					/>
+					<View style={styles.queueItemInfo}>
+						<Text style={[styles.queueItemTitle, isActiveTrack && styles.queueItemTitleActive]} numberOfLines={1}>
+							{song.title}
+						</Text>
+						<Text style={styles.queueItemArtist} numberOfLines={1}>
+							{song.artist}{song.platform ? ` · ${song.platform}` : ''}
+						</Text>
+					</View>
+					{isActiveTrack && (
+						<SFSymbol systemName="speaker.wave.3" size={19} color="rgba(255,255,255,0.8)" />
+					)}
+					<TouchableOpacity
+						onPress={(event) => { event.stopPropagation(); myTrackPlayer.remove(song) }}
+						style={styles.queueTrailingButton}
+					>
+						<SFSymbol systemName="trash" size={25} color="rgba(255,255,255,0.68)" />
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={(event) => event.stopPropagation()}
+						onLongPress={(event) => { event.stopPropagation(); handleLongPressReorder(song) }}
+						style={styles.queueTrailingButton}
+					>
+						<SFSymbol systemName="line.3.horizontal" size={24} color="rgba(255,255,255,0.68)" />
+					</TouchableOpacity>
+				</TouchableOpacity>
 			)
 		},
-		[handleTrackSelect, currentMusic, playing],
+		[handleLongPressReorder, currentMusic],
 	)
 
 	const keyExtractor = useCallback((item: Track) => item.id, [])
@@ -127,9 +184,33 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 						<SFSymbol systemName="trash" size={24} color="#8e8e93" />
 					</TouchableOpacity>
 				</View>
+				{/* 播放模式切换 */}
+				<View style={styles.queueModeSegment}>
+					<TouchableOpacity
+						style={[styles.queueModeItem, repeatMode === MusicRepeatMode.QUEUE && styles.queueModeItemActive]}
+						onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.QUEUE)}
+					>
+						<SFSymbol systemName="repeat" size={19} color={repeatMode === MusicRepeatMode.QUEUE ? '#ffffff' : 'rgba(255,255,255,0.7)'} />
+						<Text style={styles.queueModeText}>顺序</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.queueModeItem, repeatMode === MusicRepeatMode.SHUFFLE && styles.queueModeItemActive]}
+						onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.SHUFFLE)}
+					>
+						<SFSymbol systemName="shuffle" size={20} color={repeatMode === MusicRepeatMode.SHUFFLE ? '#ffffff' : 'rgba(255,255,255,0.7)'} />
+						<Text style={styles.queueModeText}>随机</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.queueModeItem, repeatMode === MusicRepeatMode.SINGLE && styles.queueModeItemActive]}
+						onPress={() => myTrackPlayer.setRepeatMode(MusicRepeatMode.SINGLE)}
+					>
+						<SFSymbol systemName="repeat.1" size={19} color={repeatMode === MusicRepeatMode.SINGLE ? '#ffffff' : 'rgba(255,255,255,0.7)'} />
+						<Text style={styles.queueModeText}>单曲</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		),
-		[top, styles.dismissPlayerBar, styles.dismissPlayerSymbol, styles.header],
+		[top, repeatMode],
 	)
 
 	const listExtraData = useMemo(
@@ -172,7 +253,7 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUtilsStyles>) =>
 	StyleSheet.create({
 		contentContainer: {
-			paddingTop: 60,
+			paddingTop: 130,
 			paddingBottom: 220,
 		},
 		itemDivider: {
@@ -203,5 +284,67 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			paddingBottom: 10,
 			paddingLeft: 20,
 			color: colors.text,
+		},
+		queueModeSegment: {
+			flexDirection: 'row',
+			backgroundColor: 'rgba(255,255,255,0.1)',
+			borderRadius: 12,
+			padding: 4,
+			marginHorizontal: 20,
+			marginBottom: 12,
+			gap: 4,
+		},
+		queueModeItem: {
+			flex: 1,
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+			paddingVertical: 8,
+			borderRadius: 8,
+			gap: 6,
+		},
+		queueModeItemActive: {
+			backgroundColor: 'rgba(255,255,255,0.2)',
+		},
+		queueModeText: {
+			color: 'rgba(255,255,255,0.7)',
+			fontSize: 13,
+			fontWeight: '500',
+		},
+		queueItem: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			paddingVertical: 10,
+			paddingHorizontal: 16,
+			gap: 12,
+		},
+		queueItemActive: {
+			backgroundColor: 'rgba(255,255,255,0.06)',
+		},
+		queueItemArtwork: {
+			width: 48,
+			height: 48,
+			borderRadius: 8,
+		},
+		queueItemInfo: {
+			flex: 1,
+			minWidth: 0,
+		},
+		queueItemTitle: {
+			color: colors.text,
+			fontSize: 15,
+			fontWeight: '500',
+		},
+		queueItemTitleActive: {
+			color: '#ff453a',
+		},
+		queueItemArtist: {
+			color: colors.textMuted,
+			fontSize: 13,
+			marginTop: 2,
+		},
+		queueTrailingButton: {
+			padding: 8,
+			marginLeft: 4,
 		},
 	})
