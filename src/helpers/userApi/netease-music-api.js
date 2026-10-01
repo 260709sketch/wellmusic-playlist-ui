@@ -1438,8 +1438,9 @@ export async function getNeteaseToplists(cookie = '') {
 		const response = await fetch(url, { headers })
 		const data = await response.json()
 		if (data.code === 200 && data.list) {
-			// 返回所有官方榜单，包含欧美新歌榜、说唱榜等
-			return data.list.map((t) => ({
+			// 只保留指定榜单：飙升榜、新歌榜、原创榜、热歌榜、欧美新歌榜、说唱榜
+			const KEEP_NAMES = ['飙升榜', '新歌榜', '原创榜', '热歌榜', '欧美新歌榜', '欧美热歌榜', '说唱榜', '全球说唱榜', '热度榜', 'VIP热歌榜', 'VIP新歌榜', 'BEAT']
+			return data.list.filter((t) => KEEP_NAMES.some((name) => t.name && t.name.includes(name))).map((t) => ({
 				id: t.id,
 				name: t.name,
 				coverImgUrl: t.coverImgUrl || t.picUrl || '',
