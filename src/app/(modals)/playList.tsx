@@ -25,8 +25,7 @@ const createStyles = (colors: ThemeColors) =>
 	StyleSheet.create({
 	modalContainer: {
 		flex: 1,
-		paddingHorizontal: screenPadding.horizontal,
-		backgroundColor: colors.background,
+		backgroundColor: '#1c1c1e',
 	},
 	header: {
 		fontSize: 28,

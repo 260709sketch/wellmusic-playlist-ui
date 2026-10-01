@@ -167,7 +167,7 @@ export const NowPlayList = React.memo(({ tracks }: TracksListProps) => {
 		() => (
 			<View style={[styles.dismissPlayerSymbol, { top: top - 38 }]}>
 				<View style={styles.dismissPlayerBar} />
-				<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+				<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
 					<Text style={styles.header}>播放队列 · {tracks.length}</Text>
 					<TouchableOpacity
 						onPress={() => {
@@ -257,7 +257,8 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 		contentContainer: {
 			paddingTop: 140,
 			paddingHorizontal: 20,
-			paddingBottom: 220,
+			paddingBottom: 210,
+			gap: 10,
 		},
 		itemDivider: {
 			...utilsStyles.itemSeparator,
@@ -270,6 +271,7 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			right: 0,
 			zIndex: 1000,
 			paddingTop: 10,
+			paddingHorizontal: 20,
 			paddingBottom: 16,
 			backgroundColor: '#1c1c1e',
 		},
@@ -283,75 +285,80 @@ const createStyles = (colors: ThemeColors, utilsStyles: ReturnType<typeof useUti
 			marginBottom: 10,
 		},
 		header: {
-			fontSize: 28,
+			fontSize: 22,
 			fontWeight: '500',
-			paddingBottom: 10,
-			paddingLeft: 20,
+			paddingBottom: 6,
+			paddingLeft: 0,
 			color: '#ffffff',
+			letterSpacing: -0.25,
 		},
 		queueModeSegment: {
 			flexDirection: 'row',
-			backgroundColor: 'rgba(255,255,255,0.1)',
-			borderRadius: 12,
-			padding: 4,
-			marginHorizontal: 20,
-			marginBottom: 12,
-			gap: 4,
+			height: 44,
+			borderRadius: 22,
+			overflow: 'hidden',
+			borderWidth: 1,
+			borderColor: 'rgba(255,255,255,0.12)',
+			backgroundColor: 'rgba(255,255,255,0.055)',
+			marginBottom: 16,
 		},
 		queueModeItem: {
 			flex: 1,
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'center',
-			paddingVertical: 8,
-			borderRadius: 8,
-			gap: 6,
+			gap: 9,
+			borderRightWidth: 1,
+			borderRightColor: 'rgba(255,255,255,0.10)',
 		},
 		queueModeItemActive: {
-			backgroundColor: 'rgba(255,255,255,0.2)',
+			backgroundColor: 'rgba(255,255,255,0.13)',
 		},
 		queueModeText: {
-			color: 'rgba(255,255,255,0.7)',
-			fontSize: 13,
+			fontSize: 16,
 			fontWeight: '500',
+			color: 'rgba(255,255,255,0.78)',
 		},
 		queueItem: {
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingVertical: 12,
-			paddingHorizontal: 16,
-			gap: 12,
-			borderRadius: 12,
 			backgroundColor: 'rgba(255,255,255,0.08)',
-			marginBottom: 8,
+			borderRadius: 14,
+			paddingHorizontal: 4,
+			paddingVertical: 10,
+			gap: 10,
 		},
 		queueItemActive: {
-			backgroundColor: 'rgba(255,255,255,0.15)',
+			backgroundColor: 'rgba(255,255,255,0.14)',
 		},
 		queueItemArtwork: {
 			width: 48,
 			height: 48,
-			borderRadius: 8,
+			borderRadius: 10,
 		},
 		queueItemInfo: {
 			flex: 1,
-			minWidth: 0,
+			flexShrink: 3,
+			alignItems: 'flex-start',
 		},
 		queueItemTitle: {
-			color: '#ffffff',
-			fontSize: 15,
+			fontSize: 16,
 			fontWeight: '500',
+			color: 'rgba(255,255,255,0.9)',
+			marginBottom: 3,
 		},
 		queueItemTitleActive: {
-			color: '#ff453a',
+			color: '#ffffff',
 		},
 		queueItemArtist: {
-			color: 'rgba(255,255,255,0.5)',
-			fontSize: 13,
-			marginTop: 2,
+			fontSize: 14,
+			fontWeight: '500',
+			color: 'rgba(255,255,255,0.6)',
 		},
 		queueTrailingButton: {
-			padding: 8,
-			marginLeft: 4,
+			width: 30,
+			height: 48,
+			alignItems: 'center',
+			justifyContent: 'center',
 		},
 	})
